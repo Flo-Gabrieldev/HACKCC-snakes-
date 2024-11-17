@@ -6,19 +6,22 @@ int main() {
     // Create a window
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Project-X");
     
-    int score = 0;
-    // Load the texture for coin
+    // Load the texture
     sf::Texture coinTexture;
     if (!coinTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/map/coin.png")) {
+       // std::cerr << "Error: Could not load coin.png" << std::endl;
         return -1;
     }
 
-    // Create a sprite and set its texture for coin
+    // Create a sprite and set its texture
     sf::Sprite coinSprite;
     coinSprite.setTexture(coinTexture);
+
+    // Position the coin in the center of the screen
     coinSprite.setPosition(570.f, 400.f);    
-    coinSprite.setScale(0.07f, 0.07f); // Scale the coin to 50% of its original size
+    coinSprite.setScale(0.05f, 0.05f); // Scale the coin to 50% of its original size
     coinSprite.setRotation(45.f);   // Rotate the coin 45 degrees
+
 
     // Load background texture
     sf::Texture background;
@@ -55,11 +58,11 @@ int main() {
 
     // Load textures for the enemies
     sf::Texture enemyTexture, enemyTexture2;
-    if (!enemyTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Walk+Attack_6.png")) {
+   if (!enemyTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Walk+Attack_6.png")) {
         return -1; // Error loading texture
     }
-
-    if (!enemyTexture2.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Idle_4.png")) {
+     
+   if (!enemyTexture2.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Idle_4.png")) {
         return -1; // Error loading texture
     }
 
@@ -148,6 +151,7 @@ int main() {
         // Updated sprite size considering scaling
         sf::Vector2f playerSize = playerAnimation.getSprite().getGlobalBounds().getSize();
 
+
         // Enforce boundaries for player
         if (newPosition.x < 0)
             newPosition.x = 0;
@@ -156,20 +160,21 @@ int main() {
         if (newPosition.x + playerSize.x >= 1000)  // Using playerSize for accurate boundary check
             newPosition.x = 1000 - playerSize.x;
         if (newPosition.y + playerSize.y > 850) {   // If player goes past the y-boundary
-            if (checkNewMap) {
-                newPosition.y = newPosition.y - 760;  // Reset player position on the new map
-                checkNewMap = false;     // Switch to map 2
-            }
-        } 
-        else if (newPosition.y < 10 && !checkNewMap) {  // If player crosses back from map 2 to map 1
-            newPosition.y = 850 - playerSize.y;  // Reset player position to map 1
-            checkNewMap = true;    // Switch back to map 1
-        }
+          if (checkNewMap) {
+            newPosition.y = newPosition.y - 760;  // Reset player position on the new map
+            checkNewMap = false;     // Switch to map 2
+         }
+       } 
+       else if (newPosition.y < 10 && !checkNewMap) {  // If player crosses back from map 2 to map 1
+                newPosition.y = 850 - playerSize.y;  // Reset player position to map 1
+                checkNewMap = true;    // Switch back to map 1
+       }       
 
-        if(newPosition.y + playerSize.y >= 850 && !checkNewMap) {
-            newPosition.y = 750;  // Reset player position to map 1
-        }            
-
+	if(newPosition.y + playerSize.y >= 850 && !checkNewMap)
+        {
+		newPosition.y = 750;  // Reset player position to map 1
+                
+	}			
         playerAnimation.setPosition(newPosition);
 
         // Update animation for the player
@@ -186,76 +191,60 @@ int main() {
         enemy1.update(deltaTime);
         enemy2.update(deltaTime);
 
-        // Enforce boundaries for enemies
-        sf::Vector2f enemy1Pos = enemy1.getSprite().getPosition();
-        sf::Vector2f enemy2Pos = enemy2.getSprite().getPosition();
-        sf::Vector2f enemy1Size(enemy1.getSprite().getGlobalBounds().width, enemy1.getSprite().getGlobalBounds().height);
-        sf::Vector2f enemy2Size(enemy2.getSprite().getGlobalBounds().width, enemy2.getSprite().getGlobalBounds().height);
+        // Updated sprite size considering scaling for enemies
+	sf::Vector2f enemy1Size(enemy1.getSprite().getGlobalBounds().width, enemy1.getSprite().getGlobalBounds().height);
+	sf::Vector2f enemy2Size(enemy2.getSprite().getGlobalBounds().width, enemy2.getSprite().getGlobalBounds().height);
 
-        // Check and enforce boundaries for enemy1
-        if (enemy1Pos.x < 0)
-            enemy1Pos.x = 0;
-        if (enemy1Pos.y < 0)
-            enemy1Pos.y = 0;
-        if (enemy1Pos.x + enemy1Size.x > 1000)
-            enemy1Pos.x = 1000 - enemy1Size.x;
-        if (enemy1Pos.y + enemy1Size.y > 850)
-            enemy1Pos.y = 850 - enemy1Size.y;
+	// Enforce boundaries for enemies
+	sf::Vector2f enemy1Pos = enemy1.getSprite().getPosition();
+	sf::Vector2f enemy2Pos = enemy2.getSprite().getPosition();
 
-        // Update enemy1 position
-        enemy1.getSprite().setPosition(enemy1Pos);
+// Check and enforce boundaries for enemy1
+if (enemy1Pos.x < 0)
+    enemy1Pos.x = 0;
+if (enemy1Pos.y < 0)
+    enemy1Pos.y = 0;
+if (enemy1Pos.x + enemy1Size.x > 1000)  // Using enemy1Size for accurate boundary check
+    enemy1Pos.x = 1000 - enemy1Size.x;
+if (enemy1Pos.y + enemy1Size.y > 850)  // Using enemy1Size for accurate boundary check
+    enemy1Pos.y = 850 - enemy1Size.y;
 
-        // Check and enforce boundaries for enemy2
-        if (enemy2Pos.x < 0)
-            enemy2Pos.x = 0;
-        if (enemy2Pos.y < 0)
-            enemy2Pos.y = 0;
-        if (enemy2Pos.x + enemy2Size.x > 1000)
-            enemy2Pos.x = 1000 - enemy2Size.x;
-        if (enemy2Pos.y + enemy2Size.y > 850)
-            enemy2Pos.y = 850 - enemy2Size.y;
+// Update enemy1 position
+enemy1.getSprite().setPosition(enemy1Pos);
 
-        // Update enemy2 position
-        enemy2.getSprite().setPosition(enemy2Pos);
+// Check and enforce boundaries for enemy2
+if (enemy2Pos.x < 0)
+    enemy2Pos.x = 0;
+if (enemy2Pos.y < 0)
+    enemy2Pos.y = 0;
+if (enemy2Pos.x + enemy2Size.x > 1000)  // Using enemy2Size for accurate boundary check
+    enemy2Pos.x = 1000 - enemy2Size.x;
+if (enemy2Pos.y + enemy2Size.y > 850)  // Using enemy2Size for accurate boundary check
+    enemy2Pos.y = 850 - enemy2Size.y;
 
-        // Check if player collects the coin
-        if (playerAnimation.getSprite().getGlobalBounds().intersects(coinSprite.getGlobalBounds())) {
-            score++;  // Increment the score
-            coinSprite.setPosition(-100.f, -100.f);  // Move the coin off-screen or set visibility to false
-        }
+// Update enemy2 position
+enemy2.getSprite().setPosition(enemy2Pos);
 
-        // Respawn the coin if it's off-screen
-        if (coinSprite.getPosition().x == -100.f && coinSprite.getPosition().y == -100.f) {
-            coinSprite.setPosition(rand() % (windowSize.x - 50), rand() % (windowSize.y - 50));  // Random position within window
-        }
-
-        // Create the score text
-        sf::Font font;
-        if (!font.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/Font/Planes_ValMore.ttf")) {
-            return -1;
-        }
-        sf::Text scoreText;
-        scoreText.setFont(font);
-        scoreText.setCharacterSize(24);
-        scoreText.setFillColor(sf::Color::White);
-        scoreText.setPosition(10.f, 10.f);
-        scoreText.setString("Score: " + std::to_string(score));  // Update the score string
 
         // Draw everything
         window.clear();
-        if (checkNewMap) {
-            window.draw(backgroundSprite);
-            window.draw(enemy1.getSprite());
-            window.draw(enemy2.getSprite());
-        } else {
-            window.draw(backgroundSprite2);
-        }
+       if(checkNewMap)
+       {
+	 window.draw(backgroundSprite);
+	 window.draw(enemy1.getSprite());
+         window.draw(enemy2.getSprite());
+       }
+       else
+       {
+          window.draw(backgroundSprite2);
+          window.draw(coinSprite);
+       }
+
         window.draw(playerAnimation.getSprite());
-        window.draw(coinSprite);  // Draw the coin if it hasn't been collected
-        window.draw(scoreText);   // Draw the score on the screen
+        //window.draw(enemy1.getSprite());
+        //window.draw(enemy2.getSprite());
         window.display();
     }
 
     return 0;
 }
-

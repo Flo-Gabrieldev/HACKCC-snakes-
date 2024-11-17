@@ -1,35 +1,33 @@
 #ifndef ENEMY_H
 #define ENEMY_H
+
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
 
 class Enemy {
 public:
-    // Constructor accepts Animation object and initial position
+    // Constructor accepts Animation object, position, and optional speed
     Enemy(Animation& animation, sf::Vector2f position, float speed = 100.f)
-        : animation(animation), speed(speed), direction(0.f, 0.f) {
+        : animation(animation), position(position), speed(speed) {
         animation.setPosition(position);
     }
 
-    // Update method to update animation and movement
+    // Update the enemy's animation and logic
     void update(float deltaTime) {
-        // Update the enemy's animation
-        animation.update(deltaTime);
-
-        // Move the enemy based on its direction and speed
-        sf::Vector2f movement = direction * speed * deltaTime;
-        animation.setPosition(animation.getSprite().getPosition() + movement);
+        // Move the enemy based on the current direction and speed
+        position += direction * speed * deltaTime;
+        animation.setPosition(position); // Update the animation's position
+        animation.update(deltaTime);     // Update the animation
     }
 
-    // Function to get the sprite for rendering
+    // Get the sprite for rendering
     sf::Sprite& getSprite() {
         return animation.getSprite();
     }
 
-    // Function to randomize movement direction
+    // Randomly choose a new direction (up, down, left, right)
     void randomDirection() {
-        // Randomly choose a direction (up, down, left, right)
-        int dir = rand() % 4;
+        int dir = rand() % 4; // Generate a random number between 0 and 3
         switch (dir) {
         case 0: direction = {0.f, -1.f}; break; // Move up
         case 1: direction = {0.f, 1.f}; break;  // Move down
@@ -39,9 +37,10 @@ public:
     }
 
 private:
-    Animation animation;  // Use the Animation class to handle animation
-    sf::Vector2f direction;  // Direction in which the enemy is moving
-    float speed;            // Speed at which the enemy moves
+    Animation animation;       // Handles the sprite's animation
+    sf::Vector2f position;     // Current position of the enemy
+    sf::Vector2f direction;    // Direction of movement
+    float speed;               // Speed of the enemy
 };
 
 #endif
