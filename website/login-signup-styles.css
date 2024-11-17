@@ -94,3 +94,7 @@ input:focus {
 form input.incorrect {
     border-color: red;
 }
+
+#error-message {
+    text-align: center;
+}

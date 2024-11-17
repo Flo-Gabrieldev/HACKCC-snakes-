@@ -8,16 +8,25 @@ let allInputs = [email, password, rePassword].filter(input => input !== null)
 
 form.addEventListener('submit', e => {
     let errors = []
-    errors = validation(email.value, password.value, rePassword.value)
+    let str = '';
+    if (rePassword !== null) {
+        errors = validationSignUp(email.value, password.value, rePassword.value)
+    } else {
+        errors = validationLogin(email.value, password.value)
+    }
+
     if (errors.length > 0) {
-        message.innerHTML = errors;
+        errors.forEach(element => {
+            str = str + element + "<br>";
+        })
+        message.innerHTML = str;
         e.preventDefault();
     }
 
     
 });
 
-const validation = (emailInput, passwordInput, rePasswordInput) => {
+const validationSignUp = (emailInput, passwordInput, rePasswordInput) => {
     let errors = [];
     if (emailInput < 1) {
         errors.push("Bad email");
@@ -30,6 +39,19 @@ const validation = (emailInput, passwordInput, rePasswordInput) => {
     if (rePasswordInput < 1) {
         errors.push("Bad rePassword");
         rePassword.classList.add('incorrect');
+    }
+    return errors;
+}
+
+const validationLogin = (emailInput, passwordInput) => {
+    let errors = [];
+    if (emailInput < 1) {
+        errors.push("Bad email");
+        email.classList.add('incorrect');
+    }
+    if (passwordInput < 1) {
+        errors.push("Bad Password");
+        password.classList.add('incorrect');
     }
     return errors;
 }
