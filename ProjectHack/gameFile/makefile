@@ -1,7 +1,7 @@
 # Compiler and linker settings
 CXX = g++
-CXXFLAGS = -std=c++11 -I./include
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lcurl
+CXXFLAGS = -std=c++17 -I./include
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lcurl
 
 # Directories and Executable
 SRC = main.cpp

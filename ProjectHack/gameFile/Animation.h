@@ -42,10 +42,12 @@ public:
         return sprite;
     }
 
-    void changeTexture(const sf::Texture& newTexture, int newNumFrames = 4) {
+    void changeTexture(const sf::Texture& newTexture, int newNumFrames = 4, const sf::Vector2i& vec = sf::Vector2i(32, 32), float newDuration = 1.f) {
         texture = newTexture;          // Copy the new texture
         sprite.setTexture(texture);    // Update the sprite to use the new texture
         numFrames = newNumFrames;
+	frameSize = vec;
+	duration = newDuration;
     }
 
 private:

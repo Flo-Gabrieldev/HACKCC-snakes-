@@ -9,7 +9,6 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Project-X");
     
     int score = 0;
-    int health = 10000;
 
     // Load background music
     sf::Music coin;
@@ -82,16 +81,12 @@ int main() {
     );
 
     // Load textures for the enemies
-    sf::Texture enemyTexture, enemyTexture2, kiwi;
-    if (!enemyTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/2 Owlet_Monster/Owlet_Monster_Walk_6.png")) {
+    sf::Texture enemyTexture, enemyTexture2;
+    if (!enemyTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Walk+Attack_6.png")) {
         return -1; // Error loading texture
     }
 
-    if (!enemyTexture2.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/2 Owlet_Monster/Owlet_Monster_Walk_6.png")) {
-        return -1; // Error loading texture
-    }
-
-    if (!kiwi.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Walk+Attack_6.png")) {
+    if (!enemyTexture2.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/1 Pink_Monster/Pink_Monster_Idle_4.png")) {
         return -1; // Error loading texture
     }
 
@@ -100,27 +95,17 @@ int main() {
     float enemyDuration = 1.0f;  // Adjust based on how fast you want the enemy animation
     Animation enemyAnimation(enemyTexture, enemyFrameSize, 6, enemyDuration); // Assuming 6 frames in the enemy texture
     enemyAnimation.setScale({2.f, 2.f});
-    
-    Animation kiwiAnimation(kiwi, enemyFrameSize, 6, enemyDuration); // Assuming 6 frames in the enemy texture
-    kiwiAnimation.setScale({5.f, 5.f});
 
     Enemy enemy1(enemyAnimation, {300.f, 200.f}, 150.f);  // Set speed as 150
     Enemy enemy2(enemyAnimation, {400.f, 300.f}, 100.f);  // Set speed as 100
-    Enemy kiwiBoss(kiwiAnimation, {700.f, 300.f}, 100.f);  // Set speed as 100
-    
 
     // Load textures for the player animation
-    sf::Texture walkTexture, idleTexture, attackTexture;
+    sf::Texture walkTexture, idleTexture;
     if (!walkTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/3 Dude_Monster/Dude_Monster_Walk_6.png")) {
         return -1;
     }
 
     if (!idleTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/3 Dude_Monster/Dude_Monster_Idle_4.png")) {
-        return -1;
-    }
-
-
-    if (!attackTexture.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/Attack2.png")) {
         return -1;
     }
 
@@ -145,7 +130,6 @@ int main() {
     while (window.isOpen()) {
         // Handle events
         sf::Event event;
-if(health != 0) {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -160,7 +144,6 @@ if(health != 0) {
         // Movement vector for player
         sf::Vector2f movement(0.f, 0.f);
         bool isMoving = false;
-        bool click = false;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             movement.x -= speed * deltaTime;
@@ -179,32 +162,18 @@ if(health != 0) {
             isMoving = true;
         }
 
-
-	 // Check for mouse click
-         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-
-		 click = true;
-         }
-
         // Change texture based on movement
         if (isMoving) {
             playerAnimation.changeTexture(walkTexture);
         } else {
             playerAnimation.changeTexture(idleTexture, 4);
         }
-	
-        if(click)
-	{
-	  playerAnimation.changeTexture(attackTexture, 4, sf::Vector2i(43, 32), .4f);
-	  
-        } //else playerAnimation.changeTexture(idleTexture, 4);
 
         // Update sprite position for player
         sf::Vector2f newPosition = playerAnimation.getSprite().getPosition() + movement;
 
         // Updated sprite size considering scaling
         sf::Vector2f playerSize = playerAnimation.getSprite().getGlobalBounds().getSize();
-
 
         // Enforce boundaries for player
         if (newPosition.x < 0)
@@ -237,22 +206,18 @@ if(health != 0) {
         if (randomDirectionClock.getElapsedTime().asSeconds() > 3.f) {
             enemy1.randomDirection();
             enemy2.randomDirection();
-	    kiwiBoss.randomDirection();
             randomDirectionClock.restart(); // Reset the timer
         }
 
         // Update enemy positions
         enemy1.update(deltaTime);
         enemy2.update(deltaTime);
-        kiwiBoss.update(deltaTime);
 
         // Enforce boundaries for enemies
         sf::Vector2f enemy1Pos = enemy1.getSprite().getPosition();
         sf::Vector2f enemy2Pos = enemy2.getSprite().getPosition();
         sf::Vector2f enemy1Size(enemy1.getSprite().getGlobalBounds().width, enemy1.getSprite().getGlobalBounds().height);
         sf::Vector2f enemy2Size(enemy2.getSprite().getGlobalBounds().width, enemy2.getSprite().getGlobalBounds().height);
-        sf::Vector2f kiwipos = kiwiBoss.getSprite().getPosition();
-       sf::Vector2f kiwiSize(kiwiBoss.getSprite().getGlobalBounds().width, kiwiBoss.getSprite().getGlobalBounds().height);
 
         // Check and enforce boundaries for enemy1
         if (enemy1Pos.x < 0)
@@ -280,20 +245,6 @@ if(health != 0) {
         // Update enemy2 position
         enemy2.getSprite().setPosition(enemy2Pos);
 
-	// Check and enforce boundaries for kiwi
-        if (kiwipos.x < 0)
-            kiwipos.x = 0;
-        if (kiwipos.y < 0)
-            kiwipos.y = 0;
-        if (kiwipos.x + kiwiSize.x > 1000)
-            kiwipos.x = 1000 - kiwiSize.x;
-        if (kiwipos.y + kiwiSize.y > 850)
-            kiwipos.y = 850 - kiwiSize.y;
-
-        // Update kiwi position
-        kiwiBoss.getSprite().setPosition(kiwipos);
-
-
         // Check if player collects the coin
         if (playerAnimation.getSprite().getGlobalBounds().intersects(coinSprite.getGlobalBounds())) {
             score++;  // Increment the score
@@ -318,32 +269,8 @@ if(health != 0) {
         scoreText.setPosition(10.f, 10.f);
         scoreText.setString("Score: " + std::to_string(score));  // Update the score string
 
-if (click) {
-    sf::FloatRect playerBounds = playerAnimation.getSprite().getGlobalBounds();
-    sf::FloatRect enemy1Bounds = enemy1.getSprite().getGlobalBounds();
-    sf::FloatRect enemy2Bounds = enemy2.getSprite().getGlobalBounds();
-    sf::FloatRect kiwiBounds = kiwiBoss.getSprite().getGlobalBounds();
 
-    // Check collisions and handle them
-    if (playerBounds.intersects(enemy1Bounds)) {
-        // Handle collision with enemy1 (e.g., eliminate enemy1)
-        score += 1;
-//	enemy1.getSprite().setPosition({-1000.f, 0.f});
-    }
-    if (playerBounds.intersects(enemy2Bounds)) {
-        // Handle collision with enemy2
-        score += 1;
-//	enemy2.getSprite().setPosition({-1000.f, 0.f});
-    }
-    if (playerBounds.intersects(kiwiBounds)) {
-        // Handle collision with kiwi boss
-        score += 5;
-//	kiwiBoss.getSprite().setPosition({500.f, 500.f});
-        --health;
-    }
-}
-
-
+//	music.play();
 
         // Draw everything
         window.clear();
@@ -353,41 +280,12 @@ if (click) {
             window.draw(enemy2.getSprite());
         } else {
             window.draw(backgroundSprite2);
-            window.draw(kiwiBoss.getSprite());
         }
         window.draw(playerAnimation.getSprite());
         window.draw(coinSprite);  // Draw the coin if it hasn't been collected
         window.draw(scoreText);   // Draw the score on the screen
         window.display();
-  }
-
-  else
-{
-
-        sf::Font font;
-        if (!font.loadFromFile("/Users/hashi/Desktop/HACKCC-snakes-/ProjectHack/character/character/Font/Planes_ValMore.ttf")) {
-            return -1;
-        }
-        sf::Text ending;
-        ending.setFont(font);
-        ending.setCharacterSize(40);
-        ending.setFillColor(sf::Color::White);
-        ending.setPosition(300.f, 400.f);
-        ending.setString("Press A to reset");  // Update the score string
-	playerAnimation.setPosition({600, 0});
-
-         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-
-                 health = 10000;
-         }
-window.clear();
-window.draw(ending);
-window.display();
-
-}
-
- 
-}
+    }
 
     return 0;
 }
