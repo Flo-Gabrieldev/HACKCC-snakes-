@@ -19,3 +19,5 @@ $(EXEC): $(SRC)
 clean:
 	rm -f $(EXEC)
 
+run:
+	./$(EXEC)
