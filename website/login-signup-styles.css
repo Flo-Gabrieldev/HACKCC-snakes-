@@ -1,0 +1,100 @@
+* {
+    font-size: 16;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --card-color:#F5EFFF;
+    --accent-color: #A594F9;
+    --primary-button: #FFC061;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+h1 {
+    
+    text-align: center;
+    width: 200px;
+}
+img {
+    margin-top: 20px;
+    width: 200px;
+}
+
+
+.left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--card-color);
+    width: 60%;
+    height: 100%;
+}
+
+.right {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+    width: 40%;
+    height: 100%;
+    background-color: var(--accent-color);
+}
+
+
+.right h2 {
+    margin-bottom: 20px;
+}
+.right form {
+    display: flex;
+    flex-direction: column;
+} 
+
+.right form input {
+    min-width: 260px;
+    margin: 6px;
+    padding: 10px;
+    border-radius: 10px; 
+    border: 3px solid white;
+}
+
+
+input:focus::placeholder {
+    color:transparent;
+}
+
+input:focus {
+    outline: none;
+}
+
+#button {
+    display: flex;
+    justify-content: center;
+}
+
+#button input {
+    border: 1px solid var(--primary-button);
+    min-width: 80px;
+    padding: 4px;
+    background-color: var(--primary-button);
+}
+
+form input.incorrect {
+    border-color: red;
+}
+
+#error-message {
+    text-align: center;
+}

@@ -1,0 +1,44 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+:root {
+    --card-color:#F5EFFF;
+    --accent-color: #A594F9;
+    --primary-button: #FFC061;
+}
+
+nav {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    background-color: var(--accent-color);
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 4px solid black;
+    font-weight: bolder;
+}
+
+nav div {
+    display: flex;
+}
+
+nav div h3 {
+    margin-left: 30px;
+}
+
+nav button {
+    height: 20px;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+.right li{
+    margin: 0 10px;
+}
+
