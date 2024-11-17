@@ -1,3 +1,4 @@
+#For mongoDB for accounts
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
@@ -13,11 +14,26 @@ try:
 except Exception as e:
     print(e)
 
+#For flask for HTML and Python interchangeability
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        # Get data from the form
+        Email = request.form['Email']
+        Password = request.form['Password']
+    
+    return render_template(Email)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+#Data from mongodb
 database = client['UsersCluster']
 collection = database['UserDB']
-
-#Test creating fake email
-account = "dungeonGuy@gmail.com"
 
 signedIn = False
 
@@ -25,7 +41,6 @@ signedIn = False
 signIn = input("S to sign up or L to log in: ")
 while signIn != "S" and signIn != "L":
     signIn = input("S to sign up or L to log in: ")
-    signIn = "L"
 
 #Sign up
 if signIn == "S":
@@ -42,6 +57,9 @@ if signIn == "S":
     newAccount = {"Email" : newEmail,
                   "Password" : newPassword,
     }
+
+    collection.insert_one(newAccount)
+    print("New account has been created!")
     
 
 #Login
@@ -58,3 +76,25 @@ if signIn == "L":
             signedIn = True
         else:
             print("Email or password are incorrect. Please try again.")
+
+#Update login info
+changeInfo = input("Y to change information ")
+if changeInfo == "Y":
+    #Type of information being changed
+    changeType = input("E to change Email, P to change Password ")
+    while changeType != "E" and changeType != "P":
+        changeType = input("E to change Email, P to change Password ")
+
+    #Change email
+    if changeType == "E":
+        newEmail = input("Your new Email: ")
+        oldEmail = {"Email" : loginEmail}
+        emailUpdate = {"$set" : {"Email" : newEmail}}
+        collection.update_one(oldEmail, emailUpdate)
+
+    #Change password
+    if changeType == "P":
+        newerPassword = input("Your new Password: ")
+        oldPassword = {"Password" : loginPassword}
+        passwordUpdate = {"$set": {"Password" : newEmail}}
+        collection.update_one(oldPassword, passwordUpdate)
