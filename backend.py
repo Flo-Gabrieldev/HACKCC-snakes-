@@ -1,3 +1,4 @@
+#For mongoDB for accounts
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
@@ -13,6 +14,24 @@ try:
 except Exception as e:
     print(e)
 
+#For flask for HTML and Python interchangeability
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        # Get data from the form
+        Email = request.form['Email']
+        Password = request.form['Password']
+    
+    return render_template(Email)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+#Data from mongodb
 database = client['UsersCluster']
 collection = database['UserDB']
 
